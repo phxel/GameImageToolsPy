@@ -10,22 +10,23 @@ def convert_normal_map(input_path, output_folder):
         # Convert to numpy array
         img_array = np.array(img)
 
-        # Check if the image is in RGB mode
-        if img.mode != 'RGB':
-            print(f"Warning: Unexpected color mode {img.mode} for {input_path}")
-            return
+        # Extract channels (assuming RGBA, handle RGB similarly)
+        r, g, b, a = img_array[:, :, 0], img_array[:, :, 1], img_array[:, :, 2], img_array[:, :, 3]
 
-        # Move alpha to green and fill blue with 255 (white)
-        img_array[:,:,1] = img_array[:,:,3]  # Alpha to Green
-        img_array[:,:,2] = 255               # Blue to White
+        # Perform the conversion
+        new_r = a  # Alpha to Red
+        new_g = b  # Blue to Green
+        new_b = r  # Red to Blue
+        new_a = 255 * np.ones_like(r)  # White Alpha
+
+        # Recombine into a new image array
+        new_img_array = np.dstack((new_r, new_g, new_b, new_a))
 
         # Create and save the new image
-        converted_img = Image.fromarray(img_array[:,:,:3], 'RGB')  # Remove alpha channel
-
+        converted_img = Image.fromarray(new_img_array.astype(np.uint8), 'RGBA') 
         base_name = os.path.splitext(os.path.basename(input_path))[0]
         output_path = os.path.join(output_folder, f"{base_name}_converted.png")
         converted_img.save(output_path)
-
         print(f"Converted: {os.path.basename(input_path)}")
         print(f"  Output: {output_path}")
 
