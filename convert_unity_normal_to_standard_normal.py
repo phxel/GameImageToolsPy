@@ -10,7 +10,7 @@ def convert_normal_map(input_path, output_folder):
         # Convert to numpy array
         img_array = np.array(img)
 
-        # Extract channels (assuming RGBA, handle RGB similarly)
+        # Extract channels
         r, g, b, a = img_array[:, :, 0], img_array[:, :, 1], img_array[:, :, 2], img_array[:, :, 3]
 
         # Perform the conversion
@@ -42,7 +42,6 @@ def process_folder(input_folder):
             except Exception as e:
                 print(f"Error processing {filename}: {str(e)}")
 
-# GUI setup
 root = tk.Tk()
 root.withdraw()
 
